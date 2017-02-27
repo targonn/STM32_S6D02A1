@@ -1,5 +1,6 @@
 #include "stm32f1xx_hal.h"
 #include "S6D02A1.h"
+#include "Font.h"
 
 extern SPI_HandleTypeDef hspi1;
 
@@ -373,7 +374,37 @@ void S6D02A1_Clear(uint16_t Color)
     }   
 }
 
+// convert 8bit separate to 16 bit color
 uint16_t S6D02A1_color565(uint8_t r, uint8_t g, uint8_t b)
 {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
+}
+
+// Fill rectangle with coordinates
+void S6D02A1_FillRect(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end, uint16_t Color)               
+{	
+   unsigned int x,y;
+   S6D02A1_SetRegion(x_start, y_start, x_end-1, y_end-1);
+   S6D02A1_SendCmd(0x2C);
+   for(x=x_start;x<x_end;x++)
+    for(y=y_start;y<y_end;y++)
+    {	
+	  	S6D02A1_SendData_16bit(Color);
+    }   
+}
+
+void S6D02A1_drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size){
+	
+	uint8_t chi;
+	S6D02A1_SetRegion(x, y, x+7, y+15);
+	for(uint8_t r=0;r<16;r++)
+	{
+		chi = asc16[(c-32)*16+r];
+		for(uint8_t c=8;c>0;c--)
+		{				
+				S6D02A1_SendData_16bit(color*((chi>>c)&0x01));
+		}
+	}
+			
+	
 }

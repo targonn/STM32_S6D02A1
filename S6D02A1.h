@@ -38,3 +38,10 @@ void S6D02A1_DrawPoint(uint16_t x,uint16_t y,uint16_t Data);
 void S6D02A1_Clear(uint16_t Color);
 
 uint16_t S6D02A1_color565(uint8_t r, uint8_t g, uint8_t b);
+
+void S6D02A1_FillRect(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end, uint16_t Color);
+
+void S6D02A1_drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
+
+
+
