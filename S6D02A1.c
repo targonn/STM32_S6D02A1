@@ -1,8 +1,12 @@
 #include "stm32f1xx_hal.h"
 #include "S6D02A1.h"
 #include "Font.h"
+#include <string.h>
 
 extern SPI_HandleTypeDef hspi1;
+
+#define FONT_H 16
+#define FONT_W 8
 
 
 
@@ -396,15 +400,34 @@ void S6D02A1_FillRect(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16
 void S6D02A1_drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size){
 	
 	uint8_t chi;
-	S6D02A1_SetRegion(x, y, x+7, y+15);
+	S6D02A1_SetRegion(x, y, x+FONT_W-1, y+FONT_H-1);
 	for(uint8_t r=0;r<16;r++)
 	{
 		chi = asc16[(c-32)*16+r];
 		for(uint8_t c=8;c>0;c--)
-		{				
-				S6D02A1_SendData_16bit(color*((chi>>c)&0x01));
+		{		
+			if( (chi>>c)&0x01 )
+				S6D02A1_SendData_16bit(color);
+			else
+				S6D02A1_SendData_16bit(bg);
 		}
 	}
 			
+	
+}
+
+void S6D02A1_drawText(uint16_t x, uint16_t y, char *string, uint16_t color, uint16_t bg, uint8_t size){
+	
+	uint8_t textLen = strlen(string); //get text length
+	uint8_t offset;
+	
+	for(offset = 0; offset < textLen; offset++)	//flip throug characters
+	{
+			S6D02A1_drawChar(x+offset*FONT_W, y, string[offset], color, bg, size);
+		
+	}
+	
+		
+	
 	
 }

@@ -43,5 +43,6 @@ void S6D02A1_FillRect(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16
 
 void S6D02A1_drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
 
+void S6D02A1_drawText(uint16_t x, uint16_t y, char *string, uint16_t color, uint16_t bg, uint8_t size);
 
 
